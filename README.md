@@ -1,2 +1,8 @@
 # ProgramManager
-My os im working on
+Shell operating system with simple functions like:
+
+- FAT32 FileSystem
+- Shell
+- Help system
+- Video up to 4K
+- Application compiler and decompiler
