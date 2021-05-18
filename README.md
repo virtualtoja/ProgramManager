@@ -6,3 +6,4 @@ Shell operating system with simple functions like:
 - Help system
 - Video up to 4K
 - Application compiler and decompiler
+- WindowManager (WIP)
