@@ -3,6 +3,7 @@ using ProgramManager.DOS;
 using ProgramManager.Graphics;
 using Sys = Cosmos.System;
 using ProgramManager.FileSystem;
+using ProgramManager.Graphics.WindowManager;
 
 namespace ProgramManager
 {
@@ -33,8 +34,9 @@ namespace ProgramManager
         {
             try
             {
-                HResConsole.Write("pmdos$:");
+                HResConsole.Write(DOScmd.path + ">");
                 DOScmd.CheckCommand(HResConsole.ReadLine());
+                WinManager.Update();
             }
             catch(Exception e)
             {

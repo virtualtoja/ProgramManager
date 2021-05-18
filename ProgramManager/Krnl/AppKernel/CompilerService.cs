@@ -1,5 +1,6 @@
 ﻿using System;
 using ProgramManager.FileSystem;
+using System.Collections.Generic;
 
 namespace ProgramManager.Krnl.AppKernel
 {
@@ -30,9 +31,62 @@ namespace ProgramManager.Krnl.AppKernel
         }
 
         public static void RunDecompiled(string code)
+        { 
+            string[] txt = code.Split(';');
+            string lb = "";
+            string[] libs = new string[0];
+
+            string type = "null";
+            if (txt[0].ToLower().StartsWith(":kernel"))
+                type = "kernel";
+            else if (txt[0].ToLower().StartsWith(":console"))
+                type = "console";
+            else if (txt[0].ToLower().StartsWith(":window"))
+                type = "window";
+
+            string libDefinition = "";
+
+            for (int i = 0; i < txt.Length; i++)
+            {
+                string line = txt[i];
+
+                if (line.StartsWith(":"))
+                {
+                    continue;
+                }
+                if (line.StartsWith("#"))
+                {
+                    if (line.StartsWith("#include "))
+                    {
+                        string lib = line.Substring(8);
+                        lb += lib + ",";
+                        libs = lb.Split(',');
+                    }
+                    else if (line.StartsWith("#define "))
+                    {
+                        //libDefinition = line.Substring(line.IndexOf(" ") + 1);
+                    }
+                }
+                else if (type == "console" && Contains(libs, "system") && line.StartsWith("writeline("))
+                {
+                    string text = line.Substring(11, line.IndexOf(");"));
+                    DOS.HResConsole.WriteLine(text);
+                }
+            }
+        }
+
+        static bool Contains(string[] vs, string key)
         {
-            string[] lines = code.Split(";");
-            AppHelper.RunSystemCodes(lines);
+            for (int i = 0; i < vs.Length; i++)
+            {
+                string v = vs[i];
+
+                if (v == key)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static void RunApplication(string path)
@@ -41,7 +95,7 @@ namespace ProgramManager.Krnl.AppKernel
             RunDecompiled(code);
         }
 
-        public static void Compile(string code)
+        public static string Compile(string code)
         {
             string text = code;
             string result = "";
@@ -54,7 +108,7 @@ namespace ProgramManager.Krnl.AppKernel
                 result += newch.ToString() + add.ToString();
             }
 
-            RunDecompiled(result);
+            return result;
         }
     }
 }
